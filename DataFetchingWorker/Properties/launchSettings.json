@@ -1,0 +1,20 @@
+{
+  "profiles": {
+    "DataFetchingWorker": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development",
+        "DATAPERSISTOR_SERVICE_SERVICE_HOST": "localhost",
+        "DATAPERSISTOR_SERVICE_SERVICE_PORT": "30050"
+      },
+      "dotnetRunMessages": "true"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "environmentVariables": {
+        "DATAPERSISTOR_SERVICE_SERVICE_HOST": "localhost",
+        "DATAPERSISTOR_SERVICE_SERVICE_PORT": "30050"
+      }
+    }
+  }
+}

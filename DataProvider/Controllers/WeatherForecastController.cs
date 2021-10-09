@@ -25,14 +25,15 @@ namespace DataProvider.Controllers
     }
 
     [HttpGet]
-    public IEnumerable<WeatherForecast> Get(DateTime start, int numberDays)
+    public IEnumerable<WeatherForecast> Get(int numberDays, DateTime? start, string location)
     {
       var rng = new Random();
       return Enumerable.Range(0, numberDays).Select(index => new WeatherForecast
       {
-        Date = start.AddDays(index),
+        Date = (start ?? DateTime.Now).AddDays(index),
         TemperatureC = rng.Next(-20, 55),
-        Summary = Summaries[rng.Next(Summaries.Length)]
+        Summary = Summaries[rng.Next(Summaries.Length)],
+        Location = location ?? Environment.GetEnvironmentVariable("HOSTNAME")
       })
       .ToArray();
     }

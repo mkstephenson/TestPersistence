@@ -1,0 +1,82 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: testpersistence
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dataprovider
+  namespace: testpersistence
+spec:
+  selector:
+    matchLabels:
+      app: dataprovider
+  template:
+    metadata:
+      labels:
+        app: dataprovider
+    spec:
+      containers:
+      - name: dataprovider
+        image: dataprovider:latest
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dataprovider-service
+  namespace: testpersistence
+spec:
+  type: NodePort
+  selector:
+    app: dataprovider
+  ports:
+  - name: http
+    port: 80
+    nodePort: 30050
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: datapersistor
+  namespace: testpersistence
+spec:
+  selector:
+    matchLabels:
+      app: datapersistor
+  template:
+    metadata:
+      labels:
+        app: datapersistor
+    spec:
+      containers:
+      - name: datapersistor
+        image: datapersistor:latest
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: datapersistor-service
+  namespace: testpersistence
+spec:
+  type: NodePort
+  selector:
+    app: datapersistor
+  ports:
+  - name: http
+    port: 80
+    nodePort: 30051
