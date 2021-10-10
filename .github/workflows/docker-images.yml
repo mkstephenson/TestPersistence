@@ -3,8 +3,9 @@ name: Docker Image CI
 on:
   push:
     branches: [ develop ]
-  pull_request:
-    branches: [ develop ]
+    paths:
+      - "DataProvider"
+      - "Common"
 
 jobs:
   build:
@@ -25,5 +26,5 @@ jobs:
       working-directory: DataProvider
 
     - name: Build ARM32 Version of Application
-      run: dotnet publish DataProvider.csproj -o ./artifacts/DataProviderarm64 -r linux-arm32
+      run: dotnet publish DataProvider.csproj -o ./artifacts/DataProviderarm64 -r linux-arm
       working-directory: DataProvider
