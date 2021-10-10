@@ -19,13 +19,13 @@ jobs:
         dotnet-version: 5.0.x
 
     - name: Build x64 Version of Application
-      run: dotnet publish DataProvider.csproj -o ./artifacts/DataProviderx64 -r linux-x64
+      run: dotnet publish DataProvider.csproj -o artifacts/DataProviderx64 -r linux-x64
       working-directory: DataProvider
 
     - name: Build ARM64 Version of Application
-      run: dotnet publish DataProvider.csproj -o ./artifacts/DataProviderarm64 -r linux-arm64
+      run: dotnet publish DataProvider.csproj -o artifacts/DataProviderarm64 -r linux-arm64
       working-directory: DataProvider
 
     - name: Build ARM32 Version of Application
-      run: dotnet publish DataProvider.csproj -o ./artifacts/DataProviderarm64 -r linux-arm
+      run: dotnet publish DataProvider.csproj -o artifacts/DataProviderarm64 -r linux-arm
       working-directory: DataProvider
