@@ -32,14 +32,9 @@ jobs:
     - name: Docker Setup Buildx
       uses: docker/setup-buildx-action@v1.6.0
 
-    - name: Build x64 Version of Application
-      run: dotnet publish DataProvider.csproj -o ./artifacts/DataProviderx64 -r linux-x64
+    - name: Build Dataprovider
+      run: dotnet publish DataProvider.csproj -o ../artifacts/DataProvider
       working-directory: DataProvider
-      
-    - name: Build ARM64 Version of Application
-      run: dotnet publish DataProvider.csproj -o ./artifacts/DataProviderarm64 -r linux-arm64
-      working-directory: DataProvider
-
-    - name: Build ARM32 Version of Application
-      run: dotnet publish DataProvider.csproj -o ./artifacts/DataProviderarm64 -r linux-arm
-      working-directory: DataProvider
+    
+    - name: Build Dataprovider Image
+      run: docker buildx build --push --platform linux/arm/v7,linux/arm64/v8,linux/amd64 --tag mkstephenson/dataprovider:latest -f Dockerfiles/DataProvider.Dockerfile
