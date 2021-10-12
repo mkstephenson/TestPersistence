@@ -5,7 +5,9 @@
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development",
         "DATAPERSISTOR_SERVICE_SERVICE_HOST": "localhost",
-        "DATAPERSISTOR_SERVICE_SERVICE_PORT": "30050"
+        "DATAPERSISTOR_SERVICE_SERVICE_PORT": "5000",
+        "DATAPROVIDER_SERVICE_SERVICE_HOST": "nas.n12.eu",
+        "DATAPROVIDER_SERVICE_SERVICE_PORT": "12001"
       },
       "dotnetRunMessages": "true"
     },

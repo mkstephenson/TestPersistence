@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Common;
@@ -10,7 +8,7 @@ using DataPersistor.Data;
 
 namespace DataPersistor.Controllers
 {
-  [Route("api/[controller]")]
+  [Route("[controller]")]
   [ApiController]
   public class WeatherForecastsPersistorController : ControllerBase
   {
@@ -42,35 +40,20 @@ namespace DataPersistor.Controllers
       return weatherForecast;
     }
 
-    // PUT: api/WeatherForecastsPersistor/5
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPut("{id}")]
-    public async Task<IActionResult> PutWeatherForecast(int id, WeatherForecast weatherForecast)
+    [HttpGet("lastforlocation/{location}")]
+    public async Task<ActionResult<WeatherForecast>> GetLastForLocation(string location)
     {
-      if (id != weatherForecast.Id)
+      var forecast = await _context.WeatherForecast
+        .Where(f => f.Location == location)
+        .OrderByDescending(f => f.Date)
+        .FirstAsync();
+
+      if (forecast == null)
       {
-        return BadRequest();
+        return NotFound();
       }
 
-      _context.Entry(weatherForecast).State = EntityState.Modified;
-
-      try
-      {
-        await _context.SaveChangesAsync();
-      }
-      catch (DbUpdateConcurrencyException)
-      {
-        if (!WeatherForecastExists(id))
-        {
-          return NotFound();
-        }
-        else
-        {
-          throw;
-        }
-      }
-
-      return NoContent();
+      return forecast;
     }
 
     // POST: api/WeatherForecastsPersistor
@@ -82,22 +65,6 @@ namespace DataPersistor.Controllers
       await _context.SaveChangesAsync();
 
       return CreatedAtAction("GetWeatherForecast", new { id = weatherForecast.Id }, weatherForecast);
-    }
-
-    // DELETE: api/WeatherForecastsPersistor/5
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteWeatherForecast(int id)
-    {
-      var weatherForecast = await _context.WeatherForecast.FindAsync(id);
-      if (weatherForecast == null)
-      {
-        return NotFound();
-      }
-
-      _context.WeatherForecast.Remove(weatherForecast);
-      await _context.SaveChangesAsync();
-
-      return NoContent();
     }
 
     private bool WeatherForecastExists(int id)
