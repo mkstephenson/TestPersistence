@@ -1,4 +1,5 @@
 using Common;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
@@ -22,39 +23,31 @@ namespace DataFetchingWorker
     private readonly DateTime _startingTimestamp = DateTime.MinValue;
     private readonly JsonSerializerOptions _jsonSerializerOptions = new() { PropertyNameCaseInsensitive = true };
 
-    public Worker(HttpClient httpClient, ILogger<Worker> logger)
+    public Worker(HttpClient httpClient, IConfiguration configuration, ILogger<Worker> logger)
     {
       _httpClient = httpClient;
       _logger = logger;
 
       _dataPersistorUrl = new UriBuilder
       {
-        Host = Environment.GetEnvironmentVariable("DATAPERSISTOR_SERVICE_SERVICE_HOST"),
-        Port = int.Parse(Environment.GetEnvironmentVariable("DATAPERSISTOR_SERVICE_SERVICE_PORT")),
+        Host = Environment.GetEnvironmentVariable("DATAPERSISTOR_SERVICE_SERVICE_HOST") ?? configuration["DataPersistor:Host"],
+        Port = int.Parse(Environment.GetEnvironmentVariable("DATAPERSISTOR_SERVICE_SERVICE_PORT") ?? configuration["DataPersistor:Port"]),
         Scheme = "http"
       }.Uri;
 
       _dataProviderUrl = new UriBuilder
       {
-        Host = Environment.GetEnvironmentVariable("DATAPROVIDER_SERVICE_SERVICE_HOST"),
-        Port = int.Parse(Environment.GetEnvironmentVariable("DATAPROVIDER_SERVICE_SERVICE_PORT")),
+        Host = Environment.GetEnvironmentVariable("DATAPROVIDER_SERVICE_SERVICE_HOST") ?? configuration["DataProvider:Host"],
+        Port = int.Parse(Environment.GetEnvironmentVariable("DATAPROVIDER_SERVICE_SERVICE_PORT") ?? configuration["DataProvider:Port"]),
         Scheme = "http"
       }.Uri;
     }
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-      Task.WaitAll(
-        new Task[] {
-          Task.Run(() => ExecuteFetch("Berlin", stoppingToken), stoppingToken),
-          Task.Run(() => ExecuteFetch("Paris", stoppingToken), stoppingToken),
-          Task.Run(() => ExecuteFetch("Warsaw", stoppingToken), stoppingToken),
-          Task.Run(() => ExecuteFetch("Zürich", stoppingToken), stoppingToken),
-          Task.Run(() => ExecuteFetch("Innsbruck", stoppingToken), stoppingToken),
-          Task.Run(() => ExecuteFetch("Rome", stoppingToken), stoppingToken),
-          Task.Run(() => ExecuteFetch("Stuttgart", stoppingToken), stoppingToken)
-        }, stoppingToken);
-
+      var tasks = new List<Task>();
+      Parallel.For(1, 10, i => tasks.Add(Task.Run(() => ExecuteFetch($"{Environment.MachineName}-{i}", stoppingToken), stoppingToken)));
+      Task.WaitAll(tasks.ToArray());
       return Task.CompletedTask;
     }
 

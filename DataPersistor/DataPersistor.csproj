@@ -4,7 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>3b3dafd7-1a43-4d83-bc53-1350d82f9fe7</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <ApplicationInsightsResourceId>/subscriptions/206ee0c3-cbc6-403d-9e80-39628698ac8d/resourceGroups/app-insights/providers/microsoft.insights/components/DataProvider</ApplicationInsightsResourceId>
+    <ApplicationInsightsResourceId>/subscriptions/206ee0c3-cbc6-403d-9e80-39628698ac8d/resourcegroups/app-insights/providers/Microsoft.Insights/components/DataPersistor</ApplicationInsightsResourceId>
   </PropertyGroup>
 
   <ItemGroup>

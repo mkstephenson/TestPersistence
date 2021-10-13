@@ -43,7 +43,13 @@ namespace DataPersistor.Controllers
     [HttpGet("lastforlocation/{location}")]
     public async Task<ActionResult<WeatherForecast>> GetLastForLocation(string location)
     {
+      if (!await _context.WeatherForecast.AnyAsync())
+      {
+        return NotFound();
+      }
+
       var forecast = await _context.WeatherForecast
+        .AsNoTracking()
         .Where(f => f.Location == location)
         .OrderByDescending(f => f.Date)
         .FirstAsync();

@@ -16,6 +16,7 @@ namespace DataFetchingWorker
             {
               services.AddHttpClient();
               services.AddHostedService<Worker>();
+              services.AddApplicationInsightsTelemetryWorkerService(hostContext.Configuration["APPINSIGHTS_CONNECTIONSTRING"]);
             });
   }
 }
